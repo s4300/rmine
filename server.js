@@ -2,6 +2,7 @@ const WebSocket = require("ws")
 const child_proc = require("child_process");
 const uuid = require("uuid");
 const process = require("process");
+const fs = require('fs')
 
 //
 // Configuration files
@@ -91,6 +92,15 @@ wss.on("connection", socket => {
                     sendCommand(command);
                 }, FloodInterval * repeatI);
             };
+        })
+        // -- COMMANDS -- Run file
+        CheckCommand(message, "rf/", (command) => {
+            const data = fs.readFileSync(command, "UTF-8")
+            const lines = data.split(/\r?\n/)
+
+            lines.forEach(line => {
+                sendCommand(line);
+            })
         })
         // -- COMMANDS -- Temp Modify
         //
