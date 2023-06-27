@@ -2,7 +2,8 @@ const WebSocket = require("ws")
 const child_proc = require("child_process");
 const uuid = require("uuid");
 const process = require("process");
-const fs = require('fs')
+const fs = require("fs");
+const path = require("path");
 
 //
 // Configuration files
