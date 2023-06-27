@@ -15,6 +15,8 @@ let FloodAmount = Configuration.Flood_Amount;
 let FloodInterval = Configuration.Flood_Interval;
 let ServerPort = Configuration.Server_Port;
 
+let Userfiles = path.join(__dirname, "userfiles");
+
 const wss = new WebSocket.Server({ port: ServerPort })
 console.log(`Running on port ${ServerPort} | /connect localhost:${ServerPort}`)
 
@@ -95,12 +97,16 @@ wss.on("connection", socket => {
         })
         // -- COMMANDS -- Run file
         CheckCommand(message, "rf/", (command) => {
-            const data = fs.readFileSync(command, "UTF-8")
-            const lines = data.split(/\r?\n/)
+            try {
+                const data = fs.readFileSync(path.join(Userfiles, command), "UTF-8")
+                const lines = data.split(/\r?\n/)
 
-            lines.forEach(line => {
-                sendCommand(line);
-            })
+                lines.forEach(line => {
+                    sendCommand(line);
+                })
+            } catch (rfError) {
+                shellComment(`rfError: ${rfError}`);
+            }
         })
         // -- COMMANDS -- Temp Modify
         //
