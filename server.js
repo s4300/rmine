@@ -15,6 +15,7 @@ const Configuration = require("./Configuration");
 let FloodAmount = Configuration.Flood_Amount;
 let FloodInterval = Configuration.Flood_Interval;
 let ServerPort = Configuration.Server_Port;
+let RFInterval = Configuration.RunFile_Interval;
 
 let Userfiles = path.join(__dirname, "userfiles");
 
@@ -102,8 +103,10 @@ wss.on("connection", socket => {
                 const data = fs.readFileSync(path.join(Userfiles, command), "UTF-8")
                 const lines = data.split(/\r?\n/)
 
-                lines.forEach(line => {
-                    sendCommand(line);
+                lines.forEach((line, commandIndex) => {
+                    setTimeout(() => {
+                        sendCommand(line);
+                    }, commandIndex * RFInterval);
                 })
             } catch (rfError) {
                 shellComment(`rfError: ${rfError}`);
